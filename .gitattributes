@@ -1,0 +1,4 @@
+# Normalize to LF in the repository and on checkout. This marketplace is cloned
+# by Claude Code on macOS and Linux as well as Windows; line endings should not
+# depend on the contributor's core.autocrlf setting.
+* text=auto eol=lf
