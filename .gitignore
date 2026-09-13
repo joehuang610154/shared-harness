@@ -1,0 +1,11 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.idea/
+.vscode/
+
+# Personal Claude Code settings — never shared
+.claude/settings.local.json
+.claude/agent-memory/

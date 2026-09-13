@@ -1,0 +1,16 @@
+{
+  "name": "shared-harness",
+  "owner": {
+    "name": "joehuang610154",
+    "url": "https://github.com/joehuang610154"
+  },
+  "description": "Shared Claude Code harness plugins",
+  "plugins": [
+    {
+      "name": "core",
+      "source": "./plugins/core",
+      "description": "Baseline harness: skills, agents, and hooks shared across projects",
+      "repository": "https://github.com/joehuang610154/shared-harness"
+    }
+  ]
+}

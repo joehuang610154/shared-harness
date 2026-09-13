@@ -1,0 +1,10 @@
+{
+  "name": "core",
+  "description": "Baseline harness shared across projects",
+  "author": {
+    "name": "joehuang610154",
+    "url": "https://github.com/joehuang610154"
+  },
+  "homepage": "https://github.com/joehuang610154/shared-harness",
+  "repository": "https://github.com/joehuang610154/shared-harness"
+}
