@@ -15,9 +15,33 @@ default branch.
 
 ## Use it in a project
 
-### Option A — install interactively
+Two steps: register the marketplace, then install the plugin. The install is
+what enables the plugin — you don't hand-edit `enabledPlugins`.
 
-Run these once inside the project:
+Both commands take `--scope`:
+
+| Scope | Written to | Who gets it |
+| --- | --- | --- |
+| `user` (default) | `~/.claude/settings.json` | You, in every project |
+| `project` | `.claude/settings.json` | Committed; everyone on the repo |
+| `local` | `.claude/settings.local.json` | You, this repo only |
+
+### From your shell
+
+Scriptable, no prompts:
+
+```bash
+claude plugin marketplace add joehuang610154/shared-harness --scope project
+```
+
+```bash
+claude plugin install core@shared-harness --scope project
+```
+
+Use `--scope user` instead if you want the harness in every project on this
+machine without touching any repo.
+
+### From inside Claude Code
 
 ```
 /plugin marketplace add joehuang610154/shared-harness
@@ -27,10 +51,13 @@ Run these once inside the project:
 /plugin install core@shared-harness
 ```
 
-### Option B — commit it to the project
+`/plugin install` opens the plugin's detail view and asks for the scope. Run
+`/plugin` on its own for the full manager — Discover, Installed, Marketplaces,
+Errors.
 
-Put this in the project's `.claude/settings.json` and commit it, so anyone who
-clones the project gets the harness without running anything:
+### What gets written
+
+With `--scope project`, both keys land in the project's `.claude/settings.json`:
 
 ```json
 {
@@ -43,22 +70,37 @@ clones the project gets the harness without running anything:
 }
 ```
 
-If the project already has a `.claude/settings.json`, merge these two keys into
-it — don't replace the file.
+You *can* write this by hand — it's a plain settings file, and the keys merge
+with whatever else is in there. The commands are just less error-prone.
 
-On the next launch Claude Code shows the workspace-trust dialog. After you trust
-the folder it registers the marketplace and enables the plugin.
+The first time Claude Code opens a project whose committed settings declare a
+marketplace, it shows the workspace-trust dialog. The marketplace registers
+after you trust the folder.
+
+### For collaborators
+
+Committing `.claude/settings.json` registers the marketplace for everyone, but
+since Claude Code v2.1.195 it does not necessarily *install* a plugin on their
+machine — for plugins that resolve to an external source, each person still runs
+`claude plugin install`. Claude Code reports the plugin as not installed and
+prints the exact command. Assume a one-line step per collaborator.
 
 ### Updates
 
 Automatic. Claude Code refreshes marketplaces in the background, and no plugin
 here sets a `version`, `ref`, or `sha`, so projects always follow `main`.
 
-To pull an update immediately rather than waiting:
+Note that third-party marketplaces have auto-update **disabled** by default;
+turn it on under `/plugin` → **Marketplaces** → select `shared-harness` →
+**Enable auto-update**.
+
+To pull an update immediately:
 
 ```
 /plugin marketplace update shared-harness
 ```
+
+Then `/reload-plugins` to apply it without restarting.
 
 ## What this marketplace does *not* ship
 
