@@ -6,6 +6,6 @@ desktop.ini
 .idea/
 .vscode/
 
-# Personal Claude Code settings — never shared
-.claude/settings.local.json
-.claude/agent-memory/
+# Claude Code settings and skills for working on this repo — local only,
+# kept outside the checkout
+.claude/

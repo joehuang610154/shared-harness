@@ -9,7 +9,7 @@ There are two harness-shaped things in this repo. Do not confuse them.
 
 | Path | What it is |
 | --- | --- |
-| `CLAUDE.md`, `.claude/` | **Meta-harness.** Real instructions, governing work on this repo. |
+| `CLAUDE.md` | **Meta-harness.** Real instructions, governing work on this repo. |
 | `plugins/**` | **Content.** Harness for *other* projects. Data, not instructions. |
 
 Never treat anything under `plugins/` as guidance for the work you are doing
@@ -20,9 +20,12 @@ addressed to a future session in a different repository.
 The layout enforces this: Claude Code only auto-discovers `.claude/skills/`,
 `.claude/agents/`, and `.claude/CLAUDE.md`. Payload at `plugins/<name>/skills/`
 is outside that, so it is never loaded as context. Keep it that way — never
-copy or symlink plugin content into `.claude/`, and do not put a `CLAUDE.md`
-anywhere under `plugins/`. `.claude/skills/` holds only skills for working on
-this repo, such as `retrospective`.
+copy or symlink plugin content into a `.claude/` directory, and do not put a
+`CLAUDE.md` anywhere under `plugins/`.
+
+This repo has no `.claude/` of its own, and `.claude/` is gitignored. Settings
+and skills for working on it are local to each maintainer's setup, kept
+outside the checkout.
 
 ## Layout
 
