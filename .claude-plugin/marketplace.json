@@ -11,6 +11,12 @@
       "source": "./plugins/core",
       "description": "Baseline harness: skills, agents, and hooks shared across projects",
       "repository": "https://github.com/joehuang610154/shared-harness"
+    },
+    {
+      "name": "language",
+      "source": "./plugins/language",
+      "description": "Language learning: correct the user's writing in a language they are learning",
+      "repository": "https://github.com/joehuang610154/shared-harness"
     }
   ]
 }

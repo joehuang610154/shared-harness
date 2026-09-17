@@ -12,6 +12,7 @@ default branch.
 | Plugin | Description |
 | --- | --- |
 | `core` | Baseline harness shared across projects: session skills `do`, `task`, `plan`, `discussion`, plus `commit`, `todo`, and the shared `reference` canons. |
+| `language` | Language learning: `tutor <language>` corrects your most important mistake whenever you write in that language. |
 
 ## Use it in a project
 
