@@ -11,7 +11,7 @@ default branch.
 
 | Plugin | Description |
 | --- | --- |
-| `core` | Baseline harness shared across projects: session skills `do`, `task`, `plan`, `discussion`, plus `commit`, `todo`, and the shared `reference` canons. |
+| `core` | Baseline harness shared across projects: session skills `do`, `task`, `plan`, `discussion`, plus `commit`, `todo`, `update-harness`, and the shared `reference` canons. |
 | `language` | Language learning: `tutor <language>` corrects your most important mistake whenever you write in that language. |
 
 ## Use it in a project
@@ -102,6 +102,10 @@ To pull an update immediately:
 ```
 
 Then `/reload-plugins` to apply it without restarting.
+
+Or, with `core` installed, run `/core:update-harness`: it refreshes every
+marketplace, updates each installed plugin at its own scope, and reports
+before/after versions.
 
 ## What this marketplace does *not* ship
 
