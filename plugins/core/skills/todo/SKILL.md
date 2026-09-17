@@ -36,7 +36,6 @@ Route by what the item is missing.
 | An answer                           | Discussion                              |
 | A shape, or too big for one session | Plan                                    |
 | Only the work                       | Task, or a DoD item in a Task on that ground |
-| A rule about how we work            | Retrospective                           |
 | Nothing                             | Delete                                  |
 
 ## Rules
