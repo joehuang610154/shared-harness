@@ -11,7 +11,7 @@ default branch.
 
 | Plugin | Description |
 | --- | --- |
-| `core` | Baseline harness shared across projects. Currently a placeholder. |
+| `core` | Baseline harness shared across projects: session skills `do`, `task`, `plan`, `discussion`, plus `commit`, `todo`, and the shared `reference` canons. |
 
 ## Use it in a project
 

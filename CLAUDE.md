@@ -19,9 +19,10 @@ addressed to a future session in a different repository.
 
 The layout enforces this: Claude Code only auto-discovers `.claude/skills/`,
 `.claude/agents/`, and `.claude/CLAUDE.md`. Payload at `plugins/<name>/skills/`
-is outside that, so it is never loaded as context. Keep it that way — do not
-create a `.claude/skills/` directory here, and do not put a `CLAUDE.md` anywhere
-under `plugins/`.
+is outside that, so it is never loaded as context. Keep it that way — never
+copy or symlink plugin content into `.claude/`, and do not put a `CLAUDE.md`
+anywhere under `plugins/`. `.claude/skills/` holds only skills for working on
+this repo, such as `retrospective`.
 
 ## Layout
 
