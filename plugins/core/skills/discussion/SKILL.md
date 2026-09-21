@@ -15,4 +15,5 @@ description: Run a Discussion session. Talk about one topic. Decides nothing abo
 ## Rules
 
 - No project edits.
+- Only the user decides. Your thinking and the user's silence decide nothing.
 - The user closes. Nothing is owed at close: no answer, no statement, no summary.
