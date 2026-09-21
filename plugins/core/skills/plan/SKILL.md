@@ -24,7 +24,7 @@ description: Run a Plan session. Converge unclear work into a clear picture
      goes on its own line. An inference drawn from a commitment is a
      commitment of its own.
    - Open questions. The ones the user left open.
-3. Record. Plan lives in the repo, free-form. `/core:commit` as `[DOCS]` on `develop`.
+3. Record. Plan lives in the repo, free-form. `/core:commit` as `[DOCS]` on the current branch.
 
 ## Rules
 
