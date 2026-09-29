@@ -17,6 +17,12 @@
       "source": "./plugins/language",
       "description": "Language learning: correct the user's writing in a language they are learning",
       "repository": "https://github.com/joehuang610154/shared-harness"
+    },
+    {
+      "name": "experimental",
+      "source": "./plugins/experimental",
+      "description": "Experimental harness: ideas being tried out, not yet baseline",
+      "repository": "https://github.com/joehuang610154/shared-harness"
     }
   ]
 }
