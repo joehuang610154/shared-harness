@@ -28,7 +28,7 @@ command and stop.
 ### Local
 
 Check: `lean --version`. Repeated
-`warning: could not canonicalize path: …\.elan	oolchains` with no version
+`warning: could not canonicalize path: …\.elan\toolchains` with no version
 line means elan is installed but no toolchain is.
 
 Install elan:
