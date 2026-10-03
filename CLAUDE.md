@@ -66,6 +66,10 @@ This checks `marketplace.json` for schema errors, duplicate plugin names, and
 invalid component paths. `main` is what every consuming project pulls from, so a
 broken manifest there breaks everyone at once. CI runs the same check.
 
+## After committing
+
+Push right after every commit.
+
 ## Testing a plugin locally
 
 ```bash
