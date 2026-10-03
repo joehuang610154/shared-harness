@@ -11,7 +11,7 @@ default branch.
 
 | Plugin | Description |
 | --- | --- |
-| `core` | Baseline harness shared across projects: session skills `do`, `task`, `plan`, `discussion`, plus `commit`, `todo`, `update-harness`, and the shared `reference` canons. |
+| `core` | Baseline harness shared across projects: session skills `do`, `task`, `plan`, `discussion`, `design`, plus `commit`, `todo`, `update-harness`, and the shared `reference` canons. `design` writes your ideas down in a Lean file in the repo; nothing goes in until you have checked it. |
 | `language` | Language learning: `tutor <language>` corrects your most important mistake whenever you write in that language. |
 | `experimental` | Ideas being tried out, not yet baseline. `formal` turns the session into a Lean development: every answer extends one accumulating `.lean` file and claims nothing the compiler has not checked. |
 
