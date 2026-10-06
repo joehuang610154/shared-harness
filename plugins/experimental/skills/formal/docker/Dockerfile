@@ -1,5 +1,5 @@
 # Lean toolchain for the /experimental:formal skill.
-# Lean core only — no Mathlib. See SKILL.md.
+# Lean core only — no Mathlib. See setup.md.
 FROM debian:bookworm-slim
 
 RUN apt-get update \
