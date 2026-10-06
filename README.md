@@ -13,7 +13,7 @@ default branch.
 | --- | --- |
 | `core` | Baseline harness shared across projects: session skills `do`, `task`, `plan`, `discussion`, `design`, plus `commit`, `todo`, `update-harness`, and the shared `reference` canons. `design` writes your ideas down in a Lean file in the repo; nothing goes in until you have checked it. |
 | `language` | Language learning: `tutor <language>` corrects your most important mistake whenever you write in that language. |
-| `experimental` | Ideas being tried out, not yet baseline. `formal` turns the session into a Lean development: every answer extends one accumulating `.lean` file and claims nothing the compiler has not checked. |
+| `experimental` | Ideas being tried out, not yet baseline. `formal` turns the session into a Lean development: every answer extends one accumulating `.lean` file and claims nothing the compiler has not checked. Answers tell in plain prose, from cause to effect, what was granted, what Lean proved from it, and what is still open; if the project allows saving the Lean file, they link each claim to its declaration. |
 
 ## Use it in a project
 
