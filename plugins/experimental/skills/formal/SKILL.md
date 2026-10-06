@@ -7,6 +7,7 @@ disable-model-invocation: true
 # Formal
 
 An experiment. The session works in one Lean file that must always compile.
+Every response follows this skill, whatever other skill runs with it.
 
 ## Per project
 
@@ -184,7 +185,10 @@ What happened in the proof, honestly:
   so, and that it was not checked again now.
 - What each vague word was taken to mean: the `def`s the claims use. A `def`
   given a new meaning: which claims used the old one.
-- What Lean proved, and from which of those.
+- How Lean proved it: every step, in the order the proof takes it — what the
+  step starts from, and what that implies. One step per sentence. A step the
+  prose cannot say in one sentence is a missing lemma: add it to the file,
+  then say it.
 - What is open.
 - What was retracted, and what stopped holding.
 - Earlier material edited, and how.
@@ -197,8 +201,6 @@ What happened in the proof, honestly:
   declaration, no claim.
 - "Because" and "so" claim a step Lean checked. Things merely granted together
   are joined with "and".
-- A step that needs explaining is a missing lemma: add it to the file, then
-  say it.
 - Saved file: cite each declaration where its claim is made, linked to its
   line — [`shared`](formal/Cache.lean:20). A link holds as of its answer. Not
   saved: no lines cited.
