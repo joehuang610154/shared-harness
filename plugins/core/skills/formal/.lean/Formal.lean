@@ -1,36 +1,83 @@
 /-
 Formal: the base every session file imports.
 
-The skill's rules that Lean can check live here, as refusals:
+Every statement about the project is open until settled. Lean settles
+inference. The user settles meaning. The agent settles nothing.
 
-- an axiom without a source and a kind: `given` and `observed` are the only
-  ways to admit one, and `#audit` fails on a raw `axiom`
-- a declaration without its sentence: every `given`, `observed`, `def`,
-  `opaque`, and `theorem` carries a doc comment in the user's language
+## The file
+
+`.lean/` at the repository root is a Lean project. Each session writes one
+file, `.lean/Session/<date>-<time>.lean`, starting with `import Formal` and
+ending with `#audit`. Earlier sessions are never imported, and never read
+unless the user asks; a conclusion from one enters a new file as an
+observation citing the old file. Any session file may be deleted.
+
+Every claim about the project is a declaration in the file. No declaration,
+no claim. There are three kinds:
+
+- a word: `def`, `opaque`, or `inductive`, giving a vague word one meaning
+- a premise: `given` or `observed`, the only ways to admit an axiom
+- a claim: `theorem`, proved from premises or left `sorry`
+
+Every declaration carries its sentence as a doc comment, in the user's
+language. The user reads no Lean: the sentence is what they confirm, and the
+Lean beside it is the agent's transcription of it. Once confirmed, a sentence
+is quoted, never paraphrased. A paraphrase is a transcription nobody checked.
+
+## Settled and open
+
+- A theorem Lean proves is settled. It follows from what was already
+  granted, so it needs no approval.
+- A word, a `given`, and the statement of any theorem hold only after the
+  user has checked that they say what was meant. Lean cannot check meaning.
+- A theorem with `sorry` is open. Nothing rests on it.
+- A proved `False` voids every theorem until an axiom is retracted. Lean
+  says the set is wrong, not which member. An axiom is retracted by whoever
+  admitted it: an observation by its check failing, the user's word by the
+  user.
+
+## What this file refuses
+
+- a raw `axiom`, or a declaration without its sentence
 - an intent that is not a `Should …`, or a description that is
 - an observation whose cited text is no longer on its cited line
 - a theorem resting on a foreign axiom, such as the one `native_decide` brings
-- a proved `False`: the audit fails and names the axioms it rests on
+- a proved `False`
 
-`#audit`, at the end of the file, prints the words, the premises, and the
-theorems numbered in file order, each with its sentence and what it rests
-on, so the report is read off Lean rather than recalled.
+## Writing the file
+
+- One concept, one type. Two concepts with two directions each are four
+  cases, and every match covers all four or Lean refuses it.
+- Never weaken a statement to make it provable. A narrower theorem that
+  answers a different question is a wrong answer that compiles.
+- A step the prose cannot say in one sentence is a missing lemma. Add it,
+  with its sentence, then say it.
+- The agent's own belief is never an axiom. It disagrees only by observation
+  or by proof.
 -/
 import Lean
 
 namespace Formal
 
-/-- Where an axiom came from. -/
+/-- Where an axiom came from. Nothing else is a source: not the agent's
+belief, not "it is obvious", not an earlier answer. -/
 inductive Source where
-  /-- The user's words, as transcribed. -/
+  /-- The user's words, as transcribed. Holds once the user confirms the
+  sentence and the transcription beside it. Retracted only by the user. -/
   | given
-  /-- The repository: a file and line, or a command and its output. -/
+  /-- The repository: a file and line, checked on every compile, or a command
+  and its output, rerun by the agent. Void when what it cites changes.
+  Retracted by its check failing. -/
   | observed
   deriving Repr, DecidableEq
 
-/-- What an axiom says: how things are, or how they should be. -/
+/-- What an axiom says. The two are separate types, so a merged concept shows
+up as one type where there should be two. -/
 inductive Kind where
+  /-- How things are. Contradicted by observation. -/
   | description
+  /-- How things should be. Its proposition is a `Should …`. Never
+  contradicted by a description: the two meet in a `Gap`, not in `False`. -/
   | intent
   deriving Repr, DecidableEq
 
@@ -47,17 +94,20 @@ abbrev Admitted (_src : Source) (_kind : Kind) (_cite : String) (p : Prop) : Pro
 
 open Lean Elab Command Meta
 
-/-- `/-- sentence -/ given <description|intent> <name> : <prop>` -/
+/-- `/-- sentence -/ given <description|intent> <name> : <prop>`
+The user's words. The sentence is what they said; the proposition is the
+agent's transcription, which the user checks. -/
 syntax (name := givenCmd) (docComment)? "given " ident ident " : " term : command
 
 /-- `/-- sentence -/ observed <description|intent> <name> : <prop> at "<file>" <line> "<text>"`
-Refuses unless `<text>` is on line `<line>` of `<file>`, a path relative to
-the repository root, which is the parent of `.lean`. -/
+The repository. Refuses unless `<text>` is on line `<line>` of `<file>`, a
+path relative to the repository root, which is the parent of `.lean`. -/
 syntax (name := observedAtCmd)
   (docComment)? "observed " ident ident " : " term " at " str num str : command
 
 /-- `/-- sentence -/ observed <description|intent> <name> : <prop> from "<command>" "<output>"`
-Records the output. Rerunning the command is the agent's job. -/
+The repository, through a command. Records the output; rerunning the command
+is the agent's job, before bringing the user a contradiction. -/
 syntax (name := observedFromCmd)
   (docComment)? "observed " ident ident " : " term " from " str str : command
 
@@ -193,9 +243,25 @@ private structure Item where
 private def byLine (a b : Item) : Bool :=
   a.line < b.line || (a.line == b.line && a.name.toString < b.name.toString)
 
-/-- `#audit`: fail on raw or foreign axioms, a proved `False`, and a missing
-sentence; print the words, the premises, and the theorems in file order,
-numbered, each with its sentence and what it rests on. -/
+/-- `#audit`, last in every session file. Fails on a raw or foreign axiom, a
+proved `False`, and a missing sentence. Prints the ledger the report is read
+from:
+
+```
+words
+  <name>: <sentence>
+premises
+  <given|observed> <description|intent>  <name>: <sentence>  [<citation>]
+theorems  <N>
+  <k> of <N>  <status> <name>: <sentence>
+      <label>  <name>: <sentence>      -- what the proof uses directly
+      from  <premises it ultimately rests on>
+```
+
+Statuses: `proved` is settled; `open` rests on `sorry`, and nothing rests on
+it; `False` voids every theorem until an axiom is retracted; `foreign` rests
+on an axiom nobody admitted. Theorems are numbered in file order, which is
+also dependency order, so a lemma is reported before what uses it. -/
 syntax (name := auditCmd) "#audit" : command
 
 @[command_elab auditCmd] def elabAudit : CommandElab := fun _ => do
