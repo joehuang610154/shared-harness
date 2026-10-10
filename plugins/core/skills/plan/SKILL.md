@@ -12,7 +12,7 @@ description: Run a Plan session. Converge unclear work into a clear picture
 0. Read `/core:reference` unless already read.
 1. Converge. Nothing is written yet.
    - Ask the one question the picture most needs decided now, with the
-     options and a suggestion.
+     options, each with what follows from choosing it.
    - After each answer, choose the next question anew. An answer can raise
      new questions or make others moot.
    - Stop when no remaining question would change the picture. The user

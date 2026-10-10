@@ -9,7 +9,8 @@ description: Run a Discussion session. Talk about one topic. Decides nothing abo
 1. Name the topic. One sentence.
 2. Talk. Read what the topic needs. Scratchpad only.
    - Open with the whole picture of your thinking.
-   - Then one question at a time, with the options and a suggestion.
+   - Then one question at a time: what forces it, and the options, each
+     with what follows from choosing it.
 3. Record, if the user asks. Free-form, in the repo. `/core:commit` as `[DOCS]` on the current branch.
 
 ## Rules

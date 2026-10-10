@@ -28,8 +28,10 @@ Draft the response the session skill asks for. Before it goes out:
 
 1. **Verify the logic.** Every claim the draft makes about the project goes
    into the file as a `theorem`, above `#audit`, with what it rests on as
-   `given` or `observed`. A `given` holds what the user meant: a choice
-   resolved to the option chosen, a pointer to what it points at. Run
+   `given` or `observed`. What follows from an option is such a claim, with
+   the option's sentence as hypothesis, proved before the option is offered.
+   A `given` holds what the user meant: a choice resolved to the option
+   chosen, a pointer to what it points at. Run
    `lake -d .lean build && lake -d .lean env lean .lean/Session/<file>.lean`.
    A claim Lean refuses is not sent; the refusal is said instead, as part of
    the answer. Never weaken a statement to make it pass.

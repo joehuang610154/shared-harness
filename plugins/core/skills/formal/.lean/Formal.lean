@@ -40,6 +40,10 @@ what the file holds, what the user confirms, and what is quoted from then
 on. A label such as "A" or "1" is never a name, never a sentence, and never
 a word in one.
 
+An option is offered with what follows from choosing it, proved with the
+option's sentence as hypothesis. The user chooses between consequences,
+never between the agent's preferences.
+
 ## Settled and open
 
 - A theorem Lean proves is settled. It follows from what was already
