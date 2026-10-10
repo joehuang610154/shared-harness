@@ -1,0 +1,15 @@
+{
+  "description": "While the project has a .lean/ ledger, remind every response to follow /core:formal.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/hooks/formal.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}

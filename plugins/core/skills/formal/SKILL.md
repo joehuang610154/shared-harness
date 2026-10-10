@@ -9,6 +9,9 @@ disable-model-invocation: true
 Runs on every response, with whatever session skill is running. The
 concepts and the rules live in `.lean/Formal.lean`. This is only the steps.
 
+While `.lean/` exists, a hook in this plugin repeats these steps to every
+response. Delete `.lean/` to turn formal off.
+
 ## Once, at the first response
 
 1. `lean` and `lake` on the path. Without them, say so and stop.
