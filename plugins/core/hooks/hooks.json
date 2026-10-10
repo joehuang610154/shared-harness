@@ -1,5 +1,5 @@
 {
-  "description": "While the project has a .lean/ ledger, remind every response to follow /core:formal.",
+  "description": "While the project has a .lean/ ledger, make every response better by /core:formal before it goes out.",
   "hooks": {
     "UserPromptSubmit": [
       {

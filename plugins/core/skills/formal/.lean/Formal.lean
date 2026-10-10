@@ -4,6 +4,11 @@ Formal: the base every session file imports.
 Every statement about the project is open until settled. Lean settles
 inference. The user settles meaning. The agent settles nothing.
 
+The file serves the response, not the other way around. It is the
+instrument that verifies what the response claims, cuts what bears on no
+claim, and turns every reason into a proof. The response never reports the
+file; the reader sees the claims and their reasons.
+
 ## The file
 
 `.lean/` at the repository root is a Lean project. It is the session's
@@ -24,6 +29,16 @@ Every declaration carries its sentence as a doc comment, in the user's
 language. The user reads no Lean: the sentence is what they confirm, and the
 Lean beside it is the agent's transcription of it. Once confirmed, a sentence
 is quoted, never paraphrased. A paraphrase is a transcription nobody checked.
+
+## The user's words
+
+A `given` holds what the user meant, not what they typed. A choice among
+options grants the chosen option's sentence. A "yes" grants the sentence it
+answers. "The second one", "same as above", and every other pointer resolve
+to what they point at before anything is written. The resolved sentence is
+what the file holds, what the user confirms, and what is quoted from then
+on. A label such as "A" or "1" is never a name, never a sentence, and never
+a word in one.
 
 ## Settled and open
 
@@ -55,6 +70,8 @@ is quoted, never paraphrased. A paraphrase is a transcription nobody checked.
   with its sentence, then say it.
 - The agent's own belief is never an axiom. It disagrees only by observation
   or by proof.
+- Nothing goes in that the response does not rest on. A premise no proof
+  uses, and a theorem the response does not make, are noise.
 -/
 import Lean
 
@@ -63,7 +80,8 @@ namespace Formal
 /-- Where an axiom came from. Nothing else is a source: not the agent's
 belief, not "it is obvious", not an earlier answer. -/
 inductive Source where
-  /-- The user's words, as transcribed. Holds once the user confirms the
+  /-- What the user meant, as transcribed: a choice resolved to the option
+  chosen, a pointer to what it points at. Holds once the user confirms the
   sentence and the transcription beside it. Retracted only by the user. -/
   | given
   /-- The repository: a file and line, checked on every compile, or a command
@@ -96,8 +114,9 @@ abbrev Admitted (_src : Source) (_kind : Kind) (_cite : String) (p : Prop) : Pro
 open Lean Elab Command Meta
 
 /-- `/-- sentence -/ given <description|intent> <name> : <prop>`
-The user's words. The sentence is what they said; the proposition is the
-agent's transcription, which the user checks. -/
+The user's words, resolved to what they meant: a choice or a pointer is
+replaced by what it chose or pointed at. The sentence is what they said; the
+proposition is the agent's transcription, which the user checks. -/
 syntax (name := givenCmd) (docComment)? "given " ident ident " : " term : command
 
 /-- `/-- sentence -/ observed <description|intent> <name> : <prop> at "<file>" <line> "<text>"`
@@ -245,8 +264,8 @@ private def byLine (a b : Item) : Bool :=
   a.line < b.line || (a.line == b.line && a.name.toString < b.name.toString)
 
 /-- `#audit`, last in every session file. Fails on a raw or foreign axiom, a
-proved `False`, and a missing sentence. Prints the ledger the report is read
-from:
+proved `False`, and a missing sentence. Prints the ledger the response is
+checked against:
 
 ```
 words
@@ -262,7 +281,7 @@ theorems  <N>
 Statuses: `proved` is settled; `open` rests on `sorry`, and nothing rests on
 it; `False` voids every theorem until an axiom is retracted; `foreign` rests
 on an axiom nobody admitted. Theorems are numbered in file order, which is
-also dependency order, so a lemma is reported before what uses it. -/
+also dependency order, so a lemma comes before what uses it. -/
 syntax (name := auditCmd) "#audit" : command
 
 @[command_elab auditCmd] def elabAudit : CommandElab := fun _ => do
