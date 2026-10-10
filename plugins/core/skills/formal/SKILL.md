@@ -12,9 +12,6 @@ the response says and when; formal works on that response before it goes
 out, through `.lean/`. The concepts and the rules are in `.lean/Formal.lean`.
 This is only the steps.
 
-While `.lean/` exists, a hook in this plugin turns formal on for every
-response. Delete `.lean/` to turn it off.
-
 ## Once, at the first response
 
 1. `lean` and `lake` on the path. Without them, say so and stop.
