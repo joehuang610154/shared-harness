@@ -6,8 +6,9 @@ inference. The user settles meaning. The agent settles nothing.
 
 ## The file
 
-`.lean/` at the repository root is a Lean project. Each session writes one
-file, `.lean/Session/<date>-<time>.lean`, starting with `import Formal` and
+`.lean/` at the repository root is a Lean project. It is the session's
+ledger, not part of the project it sits in. Each session writes one file,
+`.lean/Session/<date>-<time>.lean`, starting with `import Formal` and
 ending with `#audit`. Earlier sessions are never imported, and never read
 unless the user asks; a conclusion from one enters a new file as an
 observation citing the old file. Any session file may be deleted.
