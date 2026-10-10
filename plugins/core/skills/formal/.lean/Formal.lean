@@ -5,13 +5,16 @@ The skill's rules that Lean can check live here, as refusals:
 
 - an axiom without a source and a kind: `given` and `observed` are the only
   ways to admit one, and `#audit` fails on a raw `axiom`
+- a declaration without its sentence: every `given`, `observed`, `def`,
+  `opaque`, and `theorem` carries a doc comment in the user's language
 - an intent that is not a `Should …`, or a description that is
 - an observation whose cited text is no longer on its cited line
 - a theorem resting on a foreign axiom, such as the one `native_decide` brings
 - a proved `False`: the audit fails and names the axioms it rests on
 
-`#audit`, at the end of the file, lists every axiom with its tags and what
-every theorem rests on, so the report is read off Lean rather than recalled.
+`#audit`, at the end of the file, prints the words, the premises, and the
+theorems numbered in file order, each with its sentence and what it rests
+on, so the report is read off Lean rather than recalled.
 -/
 import Lean
 
@@ -44,17 +47,19 @@ abbrev Admitted (_src : Source) (_kind : Kind) (_cite : String) (p : Prop) : Pro
 
 open Lean Elab Command Meta
 
-/-- `given <description|intent> <name> : <prop>` -/
-syntax (name := givenCmd) "given " ident ident " : " term : command
+/-- `/-- sentence -/ given <description|intent> <name> : <prop>` -/
+syntax (name := givenCmd) (docComment)? "given " ident ident " : " term : command
 
-/-- `observed <description|intent> <name> : <prop> at "<file>" <line> "<text>"`
+/-- `/-- sentence -/ observed <description|intent> <name> : <prop> at "<file>" <line> "<text>"`
 Refuses unless `<text>` is on line `<line>` of `<file>`, a path relative to
 the repository root, which is the parent of `.lean`. -/
-syntax (name := observedAtCmd) "observed " ident ident " : " term " at " str num str : command
+syntax (name := observedAtCmd)
+  (docComment)? "observed " ident ident " : " term " at " str num str : command
 
-/-- `observed <description|intent> <name> : <prop> from "<command>" "<output>"`
+/-- `/-- sentence -/ observed <description|intent> <name> : <prop> from "<command>" "<output>"`
 Records the output. Rerunning the command is the agent's job. -/
-syntax (name := observedFromCmd) "observed " ident ident " : " term " from " str str : command
+syntax (name := observedFromCmd)
+  (docComment)? "observed " ident ident " : " term " from " str str : command
 
 private def parseKind (k : TSyntax `ident) : CommandElabM Kind :=
   match k.getId.toString with
@@ -62,9 +67,13 @@ private def parseKind (k : TSyntax `ident) : CommandElabM Kind :=
   | "intent" => pure .intent
   | other => throwErrorAt k "expected `description` or `intent`, got `{other}`"
 
-/-- Declare the axiom, after checking that its kind matches its shape. -/
-private def admit (src : Source) (kindStx : TSyntax `ident) (name : Ident)
-    (cite : String) (prop : Term) : CommandElabM Unit := do
+/-- Declare the axiom, after checking that it has its sentence and that its
+kind matches its shape. -/
+private def admit (src : Source) (doc? : Option (TSyntax ``Parser.Command.docComment))
+    (kindStx : TSyntax `ident) (name : Ident) (cite : String) (prop : Term) :
+    CommandElabM Unit := do
+  let some doc := doc?
+    | throwErrorAt name "no sentence: every premise carries one as a doc comment, in the user's language"
   let kind ← parseKind kindStx
   let isShould ← liftTermElabM do
     let e ← Term.elabTerm prop (some (mkSort Level.zero))
@@ -82,11 +91,11 @@ private def admit (src : Source) (kindStx : TSyntax `ident) (name : Ident)
     | .description => `(Formal.Kind.description)
     | .intent => `(Formal.Kind.intent)
   let c : Term := quote cite
-  elabCommand (← `(axiom $name:ident : Formal.Admitted $s $k $c $prop))
+  elabCommand (← `($doc:docComment axiom $name:ident : Formal.Admitted $s $k $c $prop))
 
 @[command_elab givenCmd] def elabGiven : CommandElab := fun stx => do
   match stx with
-  | `(given $k:ident $n:ident : $p:term) => admit .given k n "" p
+  | `($[$doc?:docComment]? given $k:ident $n:ident : $p:term) => admit .given doc? k n "" p
   | _ => throwUnsupportedSyntax
 
 /-- The repository root: the parent of `.lean` when run from inside it. -/
@@ -96,7 +105,7 @@ private def repoRoot : IO System.FilePath := do
 
 @[command_elab observedAtCmd] def elabObservedAt : CommandElab := fun stx => do
   match stx with
-  | `(observed $k:ident $n:ident : $p:term at $file:str $line:num $text:str) =>
+  | `($[$doc?:docComment]? observed $k:ident $n:ident : $p:term at $file:str $line:num $text:str) =>
     let rel := file.getString
     let path := (← repoRoot) / rel
     let lineNo := line.getNat
@@ -108,14 +117,14 @@ private def repoRoot : IO System.FilePath := do
     let actual := lines[lineNo - 1]!
     if expected.isEmpty || (actual.splitOn expected).length < 2 then
       throwErrorAt text "line {lineNo} of {rel} reads\n  {actual}\nnot\n  {expected}"
-    admit .observed k n s!"{rel}:{lineNo} {expected.quote}" p
+    admit .observed doc? k n s!"{rel}:{lineNo} {expected.quote}" p
   | _ => throwUnsupportedSyntax
 
 @[command_elab observedFromCmd] def elabObservedFrom : CommandElab := fun stx => do
   match stx with
-  | `(observed $k:ident $n:ident : $p:term from $cmd:str $out:str) =>
+  | `($[$doc?:docComment]? observed $k:ident $n:ident : $p:term from $cmd:str $out:str) =>
     let out := out.getString.replace "\n" "\n    "
-    admit .observed k n s!"$ {cmd.getString}\n    {out}" p
+    admit .observed doc? k n s!"$ {cmd.getString}\n    {out}" p
   | _ => throwUnsupportedSyntax
 
 /-- Axioms Lean's own tactics may use. Anything else not admitted is foreign. -/
@@ -131,51 +140,138 @@ private def litString (e : Expr) : String :=
   | .lit (.strVal s) => s
   | _ => ""
 
-/-- `#audit`: fail on raw or foreign axioms; list every axiom with its tags and
-what every theorem rests on. -/
+/-- Collapse whitespace, so a doc comment reads as one line. -/
+private def squash (s : String) : String :=
+  let flat := ((s.replace "\r" " ").replace "\n" " ").replace "\t" " "
+  " ".intercalate ((flat.splitOn " ").filter (· ≠ ""))
+
+private def sentenceOf (n : Name) : CommandElabM String := do
+  match ← findDocString? (← getEnv) n with
+  | some s => pure (squash s)
+  | none => pure ""
+
+private def lineOf (n : Name) : CommandElabM Nat := do
+  match ← findDeclarationRanges? n with
+  | some r => pure r.range.pos.line
+  | none => pure 0
+
+private def isAdmittedType (t : Expr) : Bool := t.isAppOfArity ``Formal.Admitted 4
+
+/-- `given intent`, `observed description`, `theorem`, or `axiom`. -/
+private def labelOf (ci : ConstantInfo) : String :=
+  match ci with
+  | .axiomInfo ax =>
+    if isAdmittedType ax.type then
+      let args := ax.type.getAppArgs
+      s!"{lastName args[0]!} {lastName args[1]!}"
+    else "axiom"
+  | .thmInfo _ => "theorem"
+  | _ => "?"
+
+/-- The local theorems and axioms a proof uses directly, seen through internal
+auxiliaries such as `match_1` and `_proof_1`. -/
+private partial def usedLocally (env : Environment) (e : Expr) (acc : Array Name := #[]) :
+    Array Name :=
+  e.getUsedConstants.foldl (init := acc) fun acc c =>
+    if acc.contains c then acc else
+    match env.constants.map₂.find? c with
+    | none => acc
+    | some ci =>
+      if c.isInternalDetail then
+        match ci.value? (allowOpaque := true) with
+        | some v => usedLocally env v (acc.push c)
+        | none => acc.push c
+      else match ci with
+        | .thmInfo _ | .axiomInfo _ => acc.push c
+        | _ => acc
+
+private structure Item where
+  line : Nat
+  name : Name
+  text : String
+
+private def byLine (a b : Item) : Bool :=
+  a.line < b.line || (a.line == b.line && a.name.toString < b.name.toString)
+
+/-- `#audit`: fail on raw or foreign axioms, a proved `False`, and a missing
+sentence; print the words, the premises, and the theorems in file order,
+numbered, each with its sentence and what it rests on. -/
 syntax (name := auditCmd) "#audit" : command
 
 @[command_elab auditCmd] def elabAudit : CommandElab := fun _ => do
   let env ← getEnv
   let isAdmitted (a : Name) : Bool :=
     match env.find? a with
-    | some (.axiomInfo ax) => ax.type.isAppOfArity ``Formal.Admitted 4
+    | some (.axiomInfo ax) => isAdmittedType ax.type
     | _ => false
   let mut errors : Array String := #[]
-  let mut axioms : Array String := #[]
-  let mut theorems : Array String := #[]
+  let mut words : Array Item := #[]
+  let mut premises : Array Item := #[]
+  let mut thms : Array Item := #[]
   for (n, c) in env.constants.map₂.toList do
     if n.isInternalDetail then continue
     match c with
     | .axiomInfo ax =>
       if isAdmitted n then
-        let args := ax.type.getAppArgs
-        let cite := litString args[2]!
-        let cite := if cite.isEmpty then "" else s!"  {cite}"
-        axioms := axioms.push s!"{lastName args[0]!} {lastName args[1]!}  {n}{cite}"
+        let cite := litString ax.type.getAppArgs[2]!
+        let cite := if cite.isEmpty then "" else s!"  [{cite}]"
+        premises := premises.push ⟨← lineOf n, n, s!"{labelOf c}  {n}: {← sentenceOf n}{cite}"⟩
       else
         errors := errors.push s!"{n}: raw axiom; admit it with given or observed"
-    | .thmInfo t =>
-      let axs ← collectAxioms n
-      let admitted := axs.filter isAdmitted
-      let foreign := axs.filter fun a => !isAdmitted a && a != ``sorryAx && !standard.contains a
-      let from_ := if admitted.isEmpty then "nothing"
-        else ", ".intercalate (admitted.toList.map toString)
-      if !foreign.isEmpty then
-        for a in foreign do
-          errors := errors.push s!"{n}: rests on foreign axiom {a}"
-        theorems := theorems.push
-          s!"foreign {n}  rests on  {", ".intercalate (foreign.toList.map toString)}"
-      else if axs.contains ``sorryAx then
-        theorems := theorems.push s!"open    {n}"
-      else if t.type.isConstOf ``False then
-        errors := errors.push s!"{n}: proves False from {from_}; retract one of them"
-        theorems := theorems.push s!"False   {n}  from  {from_}"
-      else
-        theorems := theorems.push s!"proved  {n}  from  {from_}"
+    | .thmInfo _ =>
+      thms := thms.push ⟨← lineOf n, n, ""⟩
+    | .defnInfo _ | .opaqueInfo _ | .inductInfo _ =>
+      if isAuxRecursor env n || isNoConfusion env n || env.isProjectionFn n
+          || Meta.isInstanceCore env n then
+        continue
+      let s ← sentenceOf n
+      if s.isEmpty then
+        errors := errors.push s!"{n}: no sentence; every word carries its meaning as a doc comment"
+      words := words.push ⟨← lineOf n, n, s!"{n}: {s}"⟩
     | _ => pure ()
-  let report := (axioms.qsort (· < ·)).toList ++ (theorems.qsort (· < ·)).toList
-  logInfo ("\n".intercalate report)
+  let ordered := thms.qsort byLine
+  let total := ordered.size
+  let mut out : Array String := #[]
+  let mut k := 0
+  for it in ordered do
+    k := k + 1
+    let n := it.name
+    let some ci := env.find? n | continue
+    let axs ← collectAxioms n
+    let admitted := axs.filter isAdmitted
+    let foreign := axs.filter fun a => !isAdmitted a && a != ``sorryAx && !standard.contains a
+    let from_ := if admitted.isEmpty then "nothing"
+      else ", ".intercalate (admitted.toList.map toString)
+    let s ← sentenceOf n
+    if s.isEmpty then
+      errors := errors.push s!"{n}: no sentence; every claim carries one as a doc comment"
+    for a in foreign do
+      errors := errors.push s!"{n}: rests on foreign axiom {a}"
+    let status :=
+      if !foreign.isEmpty then "foreign"
+      else if axs.contains ``sorryAx then "open   "
+      else if ci.type.isConstOf ``False then "False  "
+      else "proved "
+    if status == "False  " then
+      errors := errors.push s!"{n}: proves False from {from_}; retract one of them"
+    out := out.push s!"  {k} of {total}  {status} {n}: {s}"
+    let used := match ci.value? (allowOpaque := true) with
+      | some v => (usedLocally env v).filter fun (c : Name) => !c.isInternalDetail && c != n
+      | none => #[]
+    let mut usedItems : Array Item := #[]
+    for u in used do
+      let label := match env.find? u with
+        | some uci => labelOf uci
+        | none => "?"
+      usedItems := usedItems.push ⟨← lineOf u, u, s!"      {label}  {u}: {← sentenceOf u}"⟩
+    for u in usedItems.qsort byLine do
+      out := out.push u.text
+    out := out.push s!"      from  {from_}"
+  let block (title : String) (xs : Array Item) : Array String :=
+    if xs.isEmpty then #[] else #[title] ++ (xs.qsort byLine).map fun i => s!"  {i.text}"
+  let report := block "words" words ++ block "premises" premises
+    ++ (if total == 0 then #[] else #[s!"theorems  {total}"] ++ out)
+  logInfo ("\n".intercalate report.toList)
   unless errors.isEmpty do
     throwError ("\n".intercalate (errors.qsort (· < ·)).toList)
 
