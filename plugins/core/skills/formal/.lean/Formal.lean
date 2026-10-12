@@ -1,96 +1,46 @@
 /-
-Formal: the base every session file imports.
+Formal: the base a session file imports.
 
-Every statement about the project is open until settled. Lean settles
-inference. The user settles meaning. The agent settles nothing.
+A session file is `.lean/Session/<date>-<time>.lean`, under `.lean/` at the
+repository root. It starts with `import Formal` and ends with `#audit`.
+Check it with
 
-The file serves the response, not the other way around. It is the
-instrument that verifies what the response claims, cuts what bears on no
-claim, and turns every reason into a proof. The response never reports the
-file; the reader sees the claims and their reasons.
+  lake -d .lean build && lake -d .lean env lean .lean/Session/<file>.lean
 
-## The file
+from the repository root: `observed … at` resolves paths against the parent
+of `.lean`.
 
-`.lean/` at the repository root is a Lean project. It is the session's
-ledger, not part of the project it sits in. Each session writes one file,
-`.lean/Session/<date>-<time>.lean`, starting with `import Formal` and
-ending with `#audit`. Earlier sessions are never imported, and never read
-unless the user asks; a conclusion from one enters a new file as an
-observation citing the old file. Any session file may be deleted.
+What this file provides:
 
-Every claim about the project is a declaration in the file. No declaration,
-no claim. There are three kinds:
+- `given <description|intent> <name> : <prop>`: an axiom from the user's
+  words.
+- `observed <description|intent> <name> : <prop> at "<file>" <line> "<text>"`:
+  an axiom from the repository, refused unless `<text>` is on that line of
+  that file.
+- `observed <description|intent> <name> : <prop> from "<command>" "<output>"`:
+  an axiom from a command's recorded output.
+- `Should p`: an intent about `p`, with no link to `p`, so `Should p` and
+  `¬ p` never prove `False`. Their conjunction is `Gap p`.
+- `Admitted src kind cite p`: the type of every admitted axiom, reducible to
+  `p`, with the tags visible in the declaration and in `#print axioms`.
+- `#audit`: prints the ledger — every word, premise and theorem with its
+  sentence, each theorem's status and what it rests on — and fails on a raw
+  `axiom`, a declaration without a sentence, a theorem resting on an axiom
+  nobody admitted, and a proved `False`.
 
-- a word: `def`, `opaque`, or `inductive`, giving a vague word one meaning
-- a premise: `given` or `observed`, the only ways to admit an axiom
-- a claim: `theorem`, proved from premises or left `sorry`
-
-Every declaration carries its sentence as a doc comment, in the user's
-language. The user reads no Lean: the sentence is what they confirm, and the
-Lean beside it is the agent's transcription of it. Once confirmed, a sentence
-is quoted, never paraphrased. A paraphrase is a transcription nobody checked.
-
-## The user's words
-
-A `given` holds what the user meant, not what they typed. A choice among
-options grants the chosen option's sentence. A "yes" grants the sentence it
-answers. "The second one", "same as above", and every other pointer resolve
-to what they point at before anything is written. The resolved sentence is
-what the file holds, what the user confirms, and what is quoted from then
-on. A label such as "A" or "1" is never a name, never a sentence, and never
-a word in one.
-
-An option is offered with what follows from choosing it, proved with the
-option's sentence as hypothesis. The user chooses between consequences,
-never between the agent's preferences.
-
-## Settled and open
-
-- A theorem Lean proves is settled. It follows from what was already
-  granted, so it needs no approval.
-- A word, a `given`, and the statement of any theorem hold only after the
-  user has checked that they say what was meant. Lean cannot check meaning.
-- A theorem with `sorry` is open. Nothing rests on it.
-- A proved `False` voids every theorem until an axiom is retracted. Lean
-  says the set is wrong, not which member. An axiom is retracted by whoever
-  admitted it: an observation by its check failing, the user's word by the
-  user.
-
-## What this file refuses
-
-- a raw `axiom`, or a declaration without its sentence
-- an intent that is not a `Should …`, or a description that is
-- an observation whose cited text is no longer on its cited line
-- a theorem resting on a foreign axiom, such as the one `native_decide` brings
-- a proved `False`
-
-## Writing the file
-
-- One concept, one type. Two concepts with two directions each are four
-  cases, and every match covers all four or Lean refuses it.
-- Never weaken a statement to make it provable. A narrower theorem that
-  answers a different question is a wrong answer that compiles.
-- A step the prose cannot say in one sentence is a missing lemma. Add it,
-  with its sentence, then say it.
-- The agent's own belief is never an axiom. It disagrees only by observation
-  or by proof.
-- Nothing goes in that the response does not rest on. A premise no proof
-  uses, and a theorem the response does not make, are noise.
+A sentence is a declaration's doc comment. A premise's kind must match its
+shape: an `intent` is a `Should …`, a `description` is not.
 -/
 import Lean
 
 namespace Formal
 
-/-- Where an axiom came from. Nothing else is a source: not the agent's
-belief, not "it is obvious", not an earlier answer. -/
+/-- Where an admitted axiom came from. -/
 inductive Source where
-  /-- What the user meant, as transcribed: a choice resolved to the option
-  chosen, a pointer to what it points at. Holds once the user confirms the
-  sentence and the transcription beside it. Retracted only by the user. -/
+  /-- The user's words. Nothing checks them. -/
   | given
   /-- The repository: a file and line, checked on every compile, or a command
-  and its output, rerun by the agent. Void when what it cites changes.
-  Retracted by its check failing. -/
+  and its recorded output. -/
   | observed
   deriving Repr, DecidableEq
 
@@ -99,8 +49,8 @@ up as one type where there should be two. -/
 inductive Kind where
   /-- How things are. Contradicted by observation. -/
   | description
-  /-- How things should be. Its proposition is a `Should …`. Never
-  contradicted by a description: the two meet in a `Gap`, not in `False`. -/
+  /-- How things should be. Its proposition is a `Should …`, so a description
+  and an intent meet in a `Gap`, not in `False`. -/
   | intent
   deriving Repr, DecidableEq
 
@@ -118,9 +68,8 @@ abbrev Admitted (_src : Source) (_kind : Kind) (_cite : String) (p : Prop) : Pro
 open Lean Elab Command Meta
 
 /-- `/-- sentence -/ given <description|intent> <name> : <prop>`
-The user's words, resolved to what they meant: a choice or a pointer is
-replaced by what it chose or pointed at. The sentence is what they said; the
-proposition is the agent's transcription, which the user checks. -/
+The user's words. The sentence is what they said; the proposition is its
+transcription. -/
 syntax (name := givenCmd) (docComment)? "given " ident ident " : " term : command
 
 /-- `/-- sentence -/ observed <description|intent> <name> : <prop> at "<file>" <line> "<text>"`
@@ -130,8 +79,8 @@ syntax (name := observedAtCmd)
   (docComment)? "observed " ident ident " : " term " at " str num str : command
 
 /-- `/-- sentence -/ observed <description|intent> <name> : <prop> from "<command>" "<output>"`
-The repository, through a command. Records the output; rerunning the command
-is the agent's job, before bringing the user a contradiction. -/
+The repository, through a command. Records the output; nothing reruns the
+command. -/
 syntax (name := observedFromCmd)
   (docComment)? "observed " ident ident " : " term " from " str str : command
 
@@ -147,7 +96,7 @@ private def admit (src : Source) (doc? : Option (TSyntax ``Parser.Command.docCom
     (kindStx : TSyntax `ident) (name : Ident) (cite : String) (prop : Term) :
     CommandElabM Unit := do
   let some doc := doc?
-    | throwErrorAt name "no sentence: every premise carries one as a doc comment, in the user's language"
+    | throwErrorAt name "no sentence: every premise carries one as a doc comment"
   let kind ← parseKind kindStx
   let isShould ← liftTermElabM do
     let e ← Term.elabTerm prop (some (mkSort Level.zero))
