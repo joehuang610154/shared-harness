@@ -1,6 +1,6 @@
 ---
 name: formal
-description: Makes every response of a session better. Not a step of its own and not a block of its own. The session skill (/core:do, /core:task, /core:plan, /core:discussion) decides what the response says; formal verifies its logic, cuts what bears on nothing, and turns every reason into a proof. The concepts and the rules are in the base, Formal.lean.
+description: Makes a session's responses about the project's contents better. Not a step of its own and not a block of its own. The session skill (/core:do, /core:task, /core:plan, /core:discussion) decides what the response says; formal verifies its logic, cuts what bears on nothing, and turns every reason into a proof. The concepts and the rules are in the base, Formal.lean.
 disable-model-invocation: true
 ---
 
@@ -12,14 +12,26 @@ the response says and when; formal works on that response before it goes
 out, through `.lean/`. The concepts and the rules are in `.lean/Formal.lean`.
 This is only the steps.
 
-## Once, at the first response
+## Which responses
+
+The ones that say something about the project's contents: what is in it, what
+it does, what it should be. A response about the session — which step this is,
+what is running, what the file holds, a request to say something again, the
+work itself — goes out as drafted. One that does both is formal for the part
+about the contents.
+
+What a command shows is the project's. That it ran is the session's.
+
+## Once, at the first such response
 
 1. `lean` and `lake` on the path. Without them, say so and stop.
 2. Copy the base over the project's: `cp -r "${CLAUDE_PLUGIN_ROOT}/skills/formal/.lean/." .lean/`
 3. Read `.lean/Formal.lean`.
 4. Create `.lean/Session/<date>-<time>.lean`: `import Formal`, then `#audit`.
 
-## Every response
+A session with no such response writes no file.
+
+## Every such response
 
 Draft the response the session skill asks for. Before it goes out:
 
