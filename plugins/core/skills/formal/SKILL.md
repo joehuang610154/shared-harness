@@ -26,5 +26,7 @@ Respond reasonably.
 - The proofs live in `.lean/` at the repository root, one file per session.
   It is the session's ledger, not the project: writing it is not a project
   edit, and nothing in it binds a later session.
-- First time in a project: check `lean --version`. No Lean, say so and
-  stop. Otherwise create `.lean/` and add it to `.gitignore`.
+- First time in a project: without `lean` and `lake`, say so and stop.
+  Otherwise copy the base, `cp -r "${CLAUDE_PLUGIN_ROOT}/skills/formal/.lean/." .lean/`,
+  and read `.lean/Formal.lean` before writing anything. The concepts and the
+  file's shape are there.
