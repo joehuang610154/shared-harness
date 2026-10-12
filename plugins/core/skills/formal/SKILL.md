@@ -1,6 +1,6 @@
 ---
 name: formal
-description: Respond reasonably. Every statement about the project is proved in Lean from the user's words and observations of the project, and the response gives the proof in natural language.
+description: Reason before answering. What a response says about the project is proved in Lean from the user's words and what the project shows, and the proof goes out in plain language, step by step.
 disable-model-invocation: true
 ---
 
@@ -20,3 +20,11 @@ Respond reasonably.
 - When the user's words and an observation disagree, there are three cases:
   the project is wrong, the user is wrong, or the user's words are an
   intent, not a description.
+
+## Note
+
+- The proofs live in `.lean/` at the repository root, one file per session.
+  It is the session's ledger, not the project: writing it is not a project
+  edit, and nothing in it binds a later session.
+- First time in a project: check `lean --version`. No Lean, say so and
+  stop. Otherwise create `.lean/` and add it to `.gitignore`.
