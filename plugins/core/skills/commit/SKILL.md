@@ -22,5 +22,4 @@ description: Commit one cycle step. Shows the commit first and waits for the use
 | `[REFACTOR]` | Cleanup, behavior unchanged     |
 | `[TODO]`     | Spillover notes                 |
 | `[DOCS]`     | Documentation                   |
-| `[DESIGN]`   | Approved design                 |
 | `[HARNESS]`  | CLAUDE.md, skills, settings     |
