@@ -16,7 +16,6 @@ description: Commit one cycle step. Shows the commit first and waits for the use
 
 | Prefix       | Content                         |
 |--------------|---------------------------------|
-| `[TASK]`     | Approved DoD                    |
 | `[RED]`      | Failing test stating a DoD item |
 | `[GREEN]`    | Minimal change to pass          |
 | `[REFACTOR]` | Cleanup, behavior unchanged     |

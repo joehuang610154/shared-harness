@@ -12,9 +12,8 @@ description: Run a Task session. Implement one idea in one session against an ap
    observable behavior. "Works correctly" is not allowed;
    "the test suite passes and X renders Y on input Z" is.
 2. Wait for the user's approval. No implementation before it.
-   Then `git flow feature start <name>` and `/core:commit` the DoD as `[TASK]`:
-   an empty commit (`--allow-empty`) whose message body is the DoD. No file
-   is written; the DoD lives only in the commit.
+   Then `git flow feature start <name>`. The DoD is not written to a file
+   and not committed.
 3. Size check. If the DoD cannot be met in one session, stop and convert to a Plan.
 4. Implement with TDD, per DoD item. Every step ends with `/core:commit`:
    - `[RED]` failing test that states the DoD item. It compiles against
