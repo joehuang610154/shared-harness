@@ -20,15 +20,9 @@ to write it strictly.
 Whatever the user says about the design goes in as the Lean form it has.
 It is not sorted into problems, solutions and premises.
 
-- A thing with parts: `structure`. Each field is a part the user named.
-  A given the user has settled about the thing lives in the shape, as a
-  field's type or a `Prop` field, so it is true by construction and
-  asserted nowhere.
-- A thing that is one of several cases, or a relation built by rules:
-  `inductive`, one constructor per case or rule the user named.
-- A value, a function or a predicate: `def`. The body is what the user
-  said it does; a predicate is a `Prop`.
-- A name the user uses for something that already has a form: `abbrev`.
+- A definition: `def`, `structure`, `inductive` or `abbrev`, whichever
+  fits. Its parts, cases and body are what the user said; a given the
+  user has settled lives in the shape, so it is asserted nowhere.
 - A claim: `theorem`. A gap in its proof is a theorem of its own with
   `sorry`, so the gap has a statement. `sorry` goes nowhere else.
 - A name the user uses without saying what it is: `opaque`.
