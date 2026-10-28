@@ -32,9 +32,7 @@ Proved means `lake build` accepts it with no `sorry`.
    that could be it: ask the user where. Run `lake build` there. No `lake`,
    no design: say so and stop.
 2. Read the definitions the design has, then write what the user said in
-   them. A new definition only where none says it. A claim is proved where
-   the design holds its reason, and left unproved where it does not.
-   Every edit builds.
+   them. A new definition only where none says it. Every edit builds.
 3. Report, then stop: what was written, what it reuses and what is new,
    what Claude read into the user's words, the lemmas left with `sorry`,
    the open branches and what rests on each, the opaque words, and what
