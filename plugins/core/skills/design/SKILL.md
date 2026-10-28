@@ -18,8 +18,6 @@ into problems, solutions and premises.
   true by the shape, not asserted.
 - A claim: a theorem. A gap in its proof is a lemma of its own with
   `sorry`, so the gap has a statement.
-- A branch the user has not decided: a hypothesis on each claim that
-  assumes it.
 - A word the design cannot give a meaning yet: `opaque`. Never a stub body.
 - Never `axiom`. It reads as true and nothing checks it.
 
@@ -35,7 +33,6 @@ Proved means `lake build` accepts it with no `sorry`.
    them. A new definition only where none says it. Every edit builds.
 3. Report, then stop: what was written, what it reuses and what is new,
    what Claude read into the user's words, the lemmas left with `sorry`,
-   the open branches and what rests on each, the opaque words, and what
-   nothing references.
+   the opaque words, and what nothing references.
 4. Record when the user says. `/core:commit` as `[DESIGN]` on the current
    branch.
