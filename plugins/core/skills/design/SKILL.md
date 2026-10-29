@@ -20,14 +20,13 @@ to write it strictly.
 Whatever the user says about the design goes in as the Lean form it has.
 It is not sorted into problems, solutions and premises.
 
-- A definition: `def`, `structure`, `inductive` or `abbrev`, whichever
-  fits. Its parts, cases and body are what the user said; a given the
-  user has settled lives in the shape, so it is asserted nowhere.
+- A definition: `def`, `structure`, `inductive`, `abbrev`, `class` or
+  `instance`, whichever fits. Its parts, cases and body are what the
+  user said; a given the user has settled lives in the shape, so it is
+  asserted nowhere.
 - A claim: `theorem`. A gap in its proof is a theorem of its own with
   `sorry`, so the gap has a statement. `sorry` goes nowhere else.
 - A name the user uses without saying what it is: `opaque`.
-- Something the user says several kinds of thing share: `class`, with
-  an `instance` for each kind.
 - A parameter a section shares: `variable`. Never a fact.
 - Each thing: its own `namespace`, under its name.
 
