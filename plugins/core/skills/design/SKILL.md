@@ -22,7 +22,9 @@ Whatever the user says about the design goes in as the Lean form it has.
 - A definition: `def`, `structure`, `inductive`, `abbrev`, `class` or
   `instance`, whichever fits. Its parts, cases and body are what the
   user said; a given the user has settled lives in the shape, so it is
-  asserted nowhere.
+  asserted nowhere. A given is vocabulary and a rule is a sentence:
+  vocabulary cannot be false, a sentence can. If the user would ever
+  ask whether the design still obeys it, it is a rule.
   - One whose body the user has not given yet: `opaque`, until they do.
 - The rules the user has collected: a system, a `structure` with each
   rule as a `Prop` field. A rule not collected is a definition nothing
