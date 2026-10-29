@@ -18,7 +18,6 @@ to write it strictly.
 ## Writing in Lean
 
 Whatever the user says about the design goes in as the Lean form it has.
-It is not sorted into problems, solutions and premises.
 
 - A definition: `def`, `structure`, `inductive`, `abbrev`, `class` or
   `instance`, whichever fits. Its parts, cases and body are what the
