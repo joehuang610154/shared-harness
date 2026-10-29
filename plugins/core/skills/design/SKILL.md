@@ -24,10 +24,10 @@ It is not sorted into problems, solutions and premises.
   `instance`, whichever fits. Its parts, cases and body are what the
   user said; a given the user has settled lives in the shape, so it is
   asserted nowhere.
+  - One whose body the user has not given yet: `opaque`, until they do.
 - A claim: `theorem`, stated over a system. A gap in its proof is a
   theorem of its own with `sorry`, so the gap has a statement. `sorry`
   goes nowhere else.
-- A name the user uses without saying what it is: `opaque`.
 - A parameter a section shares: `variable`. Never a fact.
 - Each thing: its own `namespace`, under its name.
 
