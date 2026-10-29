@@ -30,14 +30,13 @@ It is not sorted into problems, solutions and premises.
   goes nowhere else.
 - A parameter a section shares: `variable`. Never a fact.
 - Each thing: its own `namespace`, under its name.
+- Nothing the user says: `axiom`, which reads as true and nothing
+  checks it, nor `partial` or `unsafe`, which hide the body from proofs.
 
 A system is a `structure` whose fields are the rules the user has
 collected, as `Prop`s. Rules not collected are definitions nothing
 references, and may contradict each other. Each system has a witness:
 a `def` of one value of it with every rule proved and no `sorry`.
-
-Nothing the user says is an `axiom`, which reads as true and nothing
-checks it, nor `partial` or `unsafe`, which hide the body from proofs.
 
 Every edit builds. Words that fit none of the forms above: suggest the
 form to write them in, and write it on the user's yes.
