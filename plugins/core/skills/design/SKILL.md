@@ -49,9 +49,10 @@ form to write them in, and write it on the user's yes.
 1. Find the design: search the repo for lakefiles. None, or more than one
    that could be it: ask the user where. Run `lake build` there. No `lake`,
    no design: say so and stop.
-2. Read the definitions the design has. Then discuss, and whenever the
-   user says something about the design, write it and report the edit:
-   what it reuses and what is new, what Claude read into the user's
-   words, and the `sorry` it leaves.
+2. Read the definitions the design has. Then discuss, in the design's
+   own words: Lean is the record, not the subject. Whenever the user
+   says something about the design, write it and report the edit the
+   same way: what it reuses and what is new, what Claude read into the
+   user's words, and the gap it leaves.
 3. Record when the user says. Say what nothing references, then
    `/core:commit` as `[DESIGN]` on the current branch.
