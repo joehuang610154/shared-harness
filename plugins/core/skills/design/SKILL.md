@@ -34,9 +34,7 @@ It is not sorted into problems, solutions and premises.
 A system is a `structure` whose fields are the rules the user has
 collected, as `Prop`s. Rules not collected are definitions nothing
 references, and may contradict each other. Each system has a witness:
-a `def` of one value of it with every rule proved and no `sorry`,
-rewritten whenever a rule is collected. Without it the system may be
-empty, and every claim over it true of nothing.
+a `def` of one value of it with every rule proved and no `sorry`.
 
 Nothing the user says is an `axiom`, which reads as true and nothing
 checks it, nor `partial` or `unsafe`, which hide the body from proofs.
