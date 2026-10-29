@@ -39,10 +39,8 @@ a `def` of one value of it with every rule proved and no `sorry`.
 Nothing the user says is an `axiom`, which reads as true and nothing
 checks it, nor `partial` or `unsafe`, which hide the body from proofs.
 
-The definition the design already has before a new one; a new one only
-where none says it. Every edit builds. Words that fit none of the forms
-above: suggest the form to write them in, and write it on the user's
-yes.
+Every edit builds. Words that fit none of the forms above: suggest the
+form to write them in, and write it on the user's yes.
 
 ## Steps
 
