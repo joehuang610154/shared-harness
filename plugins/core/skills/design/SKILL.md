@@ -24,11 +24,19 @@ It is not sorted into problems, solutions and premises.
   `instance`, whichever fits. Its parts, cases and body are what the
   user said; a given the user has settled lives in the shape, so it is
   asserted nowhere.
-- A claim: `theorem`. A gap in its proof is a theorem of its own with
-  `sorry`, so the gap has a statement. `sorry` goes nowhere else.
+- A claim: `theorem`, stated over a system. A gap in its proof is a
+  theorem of its own with `sorry`, so the gap has a statement. `sorry`
+  goes nowhere else.
 - A name the user uses without saying what it is: `opaque`.
 - A parameter a section shares: `variable`. Never a fact.
 - Each thing: its own `namespace`, under its name.
+
+A system is a `structure` whose fields are the rules the user has
+collected, as `Prop`s. Rules not collected are definitions nothing
+references, and may contradict each other. Each system has a witness:
+a `def` of one value of it with every rule proved and no `sorry`,
+rewritten whenever a rule is collected. Without it the system may be
+empty, and every claim over it true of nothing.
 
 Nothing the user says is an `axiom`, which reads as true and nothing
 checks it, nor `partial` or `unsafe`, which hide the body from proofs.
