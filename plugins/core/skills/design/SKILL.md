@@ -24,18 +24,18 @@ Whatever the user says about the design goes in as the Lean form it has.
   user said; a given the user has settled lives in the shape, so it is
   asserted nowhere.
   - One whose body the user has not given yet: `opaque`, until they do.
-- A claim: `theorem`, stated over a system. A gap in its proof is a
-  theorem of its own with `sorry`, so the gap has a statement. `sorry`
-  goes nowhere else.
+- The rules the user has collected: a system, a `structure` with each
+  rule as a `Prop` field. A rule not collected is a definition nothing
+  references, and may contradict another.
+  - Its witness: a `def` of one value of it, with every rule proved and
+    no `sorry`.
+  - A claim over it: `theorem`. A gap in its proof is a theorem of its
+    own with `sorry`, so the gap has a statement. `sorry` goes nowhere
+    else.
 - A parameter a section shares: `variable`. Never a fact.
 - Each thing: its own `namespace`, under its name.
 - Nothing the user says: `axiom`, which reads as true and nothing
   checks it, nor `partial` or `unsafe`, which hide the body from proofs.
-
-A system is a `structure` whose fields are the rules the user has
-collected, as `Prop`s. Rules not collected are definitions nothing
-references, and may contradict each other. Each system has a witness:
-a `def` of one value of it with every rule proved and no `sorry`.
 
 Every edit builds. Words that fit none of the forms above: suggest the
 form to write them in, and write it on the user's yes.
