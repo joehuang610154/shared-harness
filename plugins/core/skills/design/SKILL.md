@@ -36,7 +36,9 @@ Whatever the user says about the design goes in as the Lean form it has.
   game the pool. A rule in no system is a definition nothing
   references, and may contradict another.
   - Its witness: a value of the rule set over the contents, every rule
-    proved and no `sorry`.
+    proved and no `sorry`. A system in development has its witness
+    written before its contents are complete, and fails to build until
+    they are.
   - A claim over it: `theorem`. A gap in its proof is a theorem of its
     own with `sorry`, so the gap has a statement. `sorry` goes nowhere
     else.
@@ -45,8 +47,13 @@ Whatever the user says about the design goes in as the Lean form it has.
 - Nothing the user says: `axiom`, which reads as true and nothing
   checks it, nor `partial` or `unsafe`, which hide the body from proofs.
 
-Every edit builds. Words that fit none of the forms above: suggest the
-form to write them in, and write it on the user's yes.
+Build after every edit. A pass means every system holds, so no proof
+is weakened and no statement is changed to make it pass. A failure is
+a problem to solve: read it to its reason, the design's own gap or an
+accident of the proof, and report the reason.
+
+Words that fit none of the forms above: suggest the form to write them
+in, and write it on the user's yes.
 
 ## Steps
 
