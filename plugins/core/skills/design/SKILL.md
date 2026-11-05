@@ -21,17 +21,22 @@ Whatever the user says about the design goes in as the Lean form it has.
 
 - A definition: `def`, `structure`, `inductive`, `abbrev`, `class` or
   `instance`, whichever fits. Its parts, cases and body are what the
-  user said; a given the user has settled lives in the shape, so it is
-  asserted nowhere.
+  user said. No sentence lives in it: not as a proof field, not as a
+  body a rule set might one day replace.
   - One whose body the user has not given yet: `opaque`, until they do.
   - Given or rule: a given is vocabulary and a rule is a sentence.
     Vocabulary cannot be false, a sentence can. If the user would ever
-    ask whether the design still obeys it, it is a rule.
-- The rules the user has collected: a system, a `structure` with each
-  rule as a `Prop` field. A rule not collected is a definition nothing
+    ask whether the design still obeys it, or what happens when it is
+    different, it is a rule.
+- The rules the user has collected: a rule set, a `structure` with each
+  rule as a `Prop` field. Rules that go together: a sub-rule set, a
+  `structure` of its own and a field of the rule set, so a rule set
+  that differs in one group reuses the others.
+- A system: a `def` pairing a rule set with its contents, for a card
+  game the pool. A rule in no system is a definition nothing
   references, and may contradict another.
-  - Its witness: a `def` of one value of it, with every rule proved and
-    no `sorry`.
+  - Its witness: a value of the rule set over the contents, every rule
+    proved and no `sorry`.
   - A claim over it: `theorem`. A gap in its proof is a theorem of its
     own with `sorry`, so the gap has a statement. `sorry` goes nowhere
     else.
