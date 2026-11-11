@@ -1,6 +1,6 @@
 ---
 name: commit
-description: Commit one cycle step. Shows the commit first and waits for the user's approval.
+description: Commit one cycle step. Commits without asking and tells the user the message.
 ---
 
 # Commit
@@ -8,9 +8,8 @@ description: Commit one cycle step. Shows the commit first and waits for the use
 ## Steps
 
 0. Read `/core:reference` unless already read.
-1. Show the prefix and message. Nothing else.
-2. Stop. Wait for the user's yes. Anything else is a no: amend and show again.
-3. Commit, alone in its own command. No edit, test or next step is chained to it.
+1. Commit, alone in its own command. No edit, test or next step is chained to it.
+2. Tell the user the prefix and message.
 
 ## Prefixes
 
