@@ -17,12 +17,12 @@ drafts no DoD and asks for none to be approved: that was `/core:design`.
    no design: say so and stop.
 2. Read the system this session implements. The request names it; if
    not, ask which. One system, or one sub-rule set of it, per session.
-   Then `git flow feature start <name>`.
 3. Discuss the implementation with the user: the language, the structure,
    and whatever else the code needs decided. Nothing is implemented
    before the user confirms it. The design says what the system is;
    these are the user's choices about how it is coded.
-4. Implement with TDD, per rule. A rule is a test group under the rule's
+4. `git flow feature start <name>`.
+5. Implement with TDD, per rule. A rule is a test group under the rule's
    name. Each test states one case of the rule, named as a statement.
    Every step ends with `/core:commit`:
    - `[RED]` failing test stating one case. It compiles against minimal
@@ -34,8 +34,8 @@ drafts no DoD and asks for none to be approved: that was `/core:design`.
    A rule that rests on a `sorry` theorem or an `opaque` definition is a
    gap the user left. Implement up to it, say which gap, and stop there.
    Filling it is `/core:design`.
-5. Verify. Run the tests. Report pass or fail per rule, with output.
-6. Report and wait for the user's explicit close.
+6. Verify. Run the tests. Report pass or fail per rule, with output.
+7. Report and wait for the user's explicit close.
    - All pass: `git flow feature finish`.
    - Any fail: fix in session, or record the failed rules and why.
      No partial "done". Branch stays open.
