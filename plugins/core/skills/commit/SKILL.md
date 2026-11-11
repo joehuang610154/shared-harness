@@ -15,12 +15,11 @@ description: Commit one cycle step. Commits without asking and tells the user th
 
 ## Prefixes
 
-| Prefix       | Content                         |
-|--------------|---------------------------------|
-| `[RED]`      | Failing test stating a DoD item |
-| `[GREEN]`    | Minimal change to pass          |
-| `[REFACTOR]` | Cleanup, behavior unchanged     |
-| `[TODO]`     | Spillover notes                 |
-| `[DOCS]`     | Documentation                   |
-| `[DESIGN]`   | Approved design                 |
-| `[HARNESS]`  | CLAUDE.md, skills, settings     |
+| Prefix       | Content                                 |
+|--------------|-----------------------------------------|
+| `[RED]`      | Failing test stating one case of a rule |
+| `[GREEN]`    | Minimal change to pass                  |
+| `[REFACTOR]` | Cleanup, behavior unchanged             |
+| `[DOCS]`     | Documentation                           |
+| `[DESIGN]`   | Approved design                         |
+| `[HARNESS]`  | CLAUDE.md, skills, settings             |
