@@ -11,7 +11,7 @@ default branch.
 
 | Plugin | Description |
 | --- | --- |
-| `core` | Baseline harness shared across projects: the session skills `design` and `do`, plus `commit`, `update-harness`, and the shared `reference` canons. |
+| `core` | Baseline harness shared across projects. `design` writes what the user says about the project into a Lean design, so Lean checks it holds together. `do` implements one system of that design with TDD. `commit` makes one prefixed commit per cycle step. `update-harness` pulls the latest plugins. `reference` holds the canons every skill reads first. |
 | `language` | Language learning: `tutor <language>` corrects your most important mistake whenever you write in that language. |
 
 Each skill carries its own description, which `/plugin` and `/help` list in a
